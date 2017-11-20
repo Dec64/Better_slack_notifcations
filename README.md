@@ -26,3 +26,10 @@ slack_url = "" #URL of your slack webhook
 sonarr_url = "" # URL to your sonarr (public accessible URL) for link in notifcation only
 radarr_url = "" # URL to your radarr (public accessible URL) for link in notifcation only
 ```
+
+### Donate
+
+If you absolutely feel the need to donate, the link is below.
+Pull requests and help cleaning up my amateur python would be more helpful :)
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/Dec64)
