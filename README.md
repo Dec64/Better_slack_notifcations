@@ -10,6 +10,10 @@ or download onto your server.
 
 To make executable: `chomod +X slack.py`
 
+`nano slack.py`
+
+and edit the config section, see below for details.
+
 on sonarr/radarr add the script under, `settings > connect > Customscript` Run on download and on upgrade. Point to slack.py and in arguments, set either `sonarr` or `radarr` respectively 
 
 ```
