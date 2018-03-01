@@ -39,8 +39,8 @@ if len(sys.argv) <= 1:
     log.error("You must send argument sonarr or radarr")
     sys.exit(0)
 
-
 elif sys.argv[1].lower() == "sonarr":
+    overview = "None"
     season = os.environ.get('sonarr_episodefile_seasonnumber')
     episode = os.environ.get('sonarr_episodefile_episodenumbers')
     tvdb_id = os.environ.get('sonarr_series_tvdbid')
@@ -85,6 +85,8 @@ elif sys.argv[1].lower() == "sonarr":
         season = "0{}".format(season)
     if len(str(episode)) == 1:
         episode = "0{}".format(episode)
+    if len(str(overview)) == 0:
+        overview = "None"
 
     message = {
         "text": "New episode downloaded",
@@ -127,7 +129,8 @@ elif sys.argv[1].lower() == "radarr":
     overview = data['movie_results'][0]['overview']
     release = data['movie_results'][0]['release_date']
     poster_path = data['movie_results'][0]['poster_path']
-    poster_path = "https://image.tmdb.org/t/p/w320" + poster_path
+    poster_path = "https://image.tmdb.org/t/p/w185" + poster_path
+    imdburl = "https://www.imdb.com/title/" + imdb_id
     radarr_id = data['movie_results'][0]['id']
 
     message = {
@@ -145,7 +148,10 @@ elif sys.argv[1].lower() == "radarr":
             {"title": "Overview",
              "color": "#3AA3E3",
              "text": overview,
-             "footer": "{} - {} - Release Date: {}".format(quality, scene_name, release)}
+             "footer": "{} - {} - Release Date: {}".format(quality, scene_name, release)},
+	    {"title": "IMDB URL",
+             "color": "#e3b53a",
+             "text": imdburl}
         ]
     }
 
