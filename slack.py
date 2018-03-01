@@ -7,7 +7,7 @@ import json
 
 #################### CONFIG ####################
 
-slack_user = "Notification Bot"
+slack_user = "Sonarr"
 slack_icon = ":satellite_antenna:"
 slack_channel_tv = "#tv"
 slack_channel_movie = "#movies"
@@ -15,6 +15,9 @@ slack_url = ""
 
 sonarr_url = ""
 radarr_url = ""
+
+moviedb_key = ""
+omdb_key = ""
 
 ############### DO NOT EDIT BELOW ###############
 
@@ -89,18 +92,19 @@ elif sys.argv[1].lower() == "sonarr":
         overview = "None"
 
     message = {
-        "text": "New episode downloaded",
+        "text": "New episode downloaded - {}: {}".format(media_title, episode_title),
         "username": slack_user,
         "icon_emoji": slack_icon,
         "channel": slack_channel_tv,
         "attachments": [
             {"title": "{}: {}".format(media_title, episode_title),
+             "color": "#3ae367",
              "title_link": "{}series/{}".format(sonarr_url, title_slug),
-             "fields": [{"title": "Season",
-                         "value": season,
+             "fields": [{"title": "Episode",
+                         "value": "s{}e{}".format(season, episode),
                          "short": True},
-                        {"title": "Episode",
-                         "value": episode,
+                        {"title": "Quality",
+                         "value": quality,
                          "short": True}],
              "author_name": "Sonarr",
              "author_link": sonarr_url,
@@ -109,7 +113,7 @@ elif sys.argv[1].lower() == "sonarr":
             {"title": "Overview",
              "color": "#3AA3E3",
              "text": overview,
-             "footer": "{} - {} - Is upgrade: {}".format(quality, scene_name, is_upgrade)}
+             "footer": "{} - Is upgrade: {}".format(scene_name, is_upgrade)}
         ]
     }
 
@@ -121,10 +125,14 @@ elif sys.argv[1].lower() == "radarr":
 
     title_slug = media_title.replace(" ", "-")
 
-    moviedb_url = "https://api.themoviedb.org/3/find/{}?api_key=1a7373301961d03f97f853a876dd1212&external_source=imdb_id".format(imdb_id)
+    moviedb_url = "https://api.themoviedb.org/3/find/{}?api_key={}&external_source=imdb_id".format(imdb_id, moviedb_key)
+    omdb_url = "https://www.omdbapi.com/?i={}&apikey={}".format(imdb_id, omdb_key)
 
     request = requests.get(moviedb_url)
     data = request.json()
+
+    request_omdb = requests.get(omdb_url)
+    data_omdb = request_omdb.json()
 
     overview = data['movie_results'][0]['overview']
     release = data['movie_results'][0]['release_date']
@@ -132,14 +140,17 @@ elif sys.argv[1].lower() == "radarr":
     poster_path = "https://image.tmdb.org/t/p/w185" + poster_path
     imdburl = "https://www.imdb.com/title/" + imdb_id
     radarr_id = data['movie_results'][0]['id']
+    imdbrating = data_omdb['imdbRating']
+    year = data_omdb['Year']
 
     message = {
-        "text": "New movie downloaded",
+        "text": "New movie downloaded - {} ({}) IMDB: {}".format(media_title, year, imdbrating),
         "username": slack_user,
         "icon_emoji": slack_icon,
         "channel": slack_channel_movie,
         "attachments": [
-            {"title": media_title,
+            {"title": "{} ({})".format(media_title, year, imdbrating),
+             "color": "#3ae367",
              "title_link": "{}movies/{}-{}".format(radarr_url, title_slug.lower(), radarr_id),
              "author_name": "Radarr",
              "author_link": radarr_url,
