@@ -7,7 +7,7 @@ import json
 
 #################### CONFIG ####################
 
-slack_user = "Sonarr"
+slack_user = "Notification Bot"
 slack_icon = ":satellite_antenna:"
 slack_channel_tv = "#tv"
 slack_channel_movie = "#movies"
